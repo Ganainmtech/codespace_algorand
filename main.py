@@ -1,123 +1,94 @@
-from algokit_utils.beta.algorand_client import(
+from algokit_utils.beta.algorand_client import (
     AlgorandClient,
     AssetCreateParams,
     AssetOptInParams,
     AssetTransferParams,
-    PayParams,
+    PayParams,   
 )
 
 algorand = AlgorandClient.default_local_net()
 
 dispenser = algorand.account.dispenser()
-#print(dispenser.address)
 
 creator = algorand.account.random()
-#print(creator.address)
 
 algorand.send.payment(
     PayParams(
-        sender=dispenser.address,
-        receiver=creator.address,
-        amount=10_000_000
+        sender= dispenser.address,
+        receiver= creator.address,
+        amount= 10_000_000
     )
 )
 
-#print(algorand.account.get_information(creator.address))
 
 sent_txn = algorand.send.asset_create(
     AssetCreateParams(
         sender=creator.address,
-        total=666,
-        asset_name="SERENITYPET",
-        unit_name="SP",
+        total=1000,
+        asset_name="BUILDH3R",
+        unit_name="H3R",
+        manager=creator.address,
+        clawback=creator.address,
+        freeze=creator.address
     )
 )
 
-asset_id= sent_txn["confirmation"]["asset-index"]
 
-account_one = algorand.account.random()
-account_two = algorand.account.random()
-account_three = algorand.account.random()
+asset_id = sent_txn["confirmation"]["asset-index"]
+
+receiver_acc = algorand.account.random()
 
 algorand.send.payment(
     PayParams(
-        sender=dispenser.address,
-        receiver=account_one.address,
-        amount=10_000_000
+        sender= dispenser.address,
+        receiver= receiver_acc.address,
+        amount= 10_000_000
     )
 )
 
-algorand.send.payment(
-    PayParams(
-        sender=dispenser.address,
-        receiver=account_two.address,
-        amount=10_000_000
-    )
-)
 
-algorand.send.payment(
-    PayParams(
-        sender=dispenser.address,
-        receiver=account_three.address,
-        amount=10_000_000
-    )
-)
+group_txn = algorand.new_group()
 
-algorand.send.asset_opt_in(
+group_txn.add_asset_opt_in(
     AssetOptInParams(
-        sender=account_one.address,
+        sender=receiver_acc.address,
         asset_id=asset_id
     )
 )
 
-algorand.send.asset_opt_in(
-    AssetOptInParams(
-        sender=account_two.address,
-        asset_id=asset_id
+group_txn.add_payment(
+    PayParams(
+        sender=receiver_acc.address,
+        receiver=creator.address,
+        amount=1_000_000
     )
 )
 
-algorand.send.asset_opt_in(
-    AssetOptInParams(
-        sender=account_three.address,
-        asset_id=asset_id
-    )
-)
-
-asset_transfer = algorand.send.asset_transfer(
+group_txn.add_asset_transfer(
     AssetTransferParams(
         sender=creator.address,
-        receiver=account_one.address,
+        receiver=receiver_acc.address,
         asset_id=asset_id,
-        amount=111
+        amount=500
     )
 )
 
-asset_transfer = algorand.send.asset_transfer(
+group_txn.execute()
+
+print("Receiver Account Asset Balance", algorand.account.get_information(receiver_acc.address)['assets'][0]['amount'])
+print("Creator Account Asset Balance", algorand.account.get_information(creator.address)['assets'][0]['amount'])
+
+# Clawback 1 tokens from receiver_acc
+clawback_txn = algorand.send.asset_transfer(
     AssetTransferParams(
-        sender=creator.address,
-        receiver=account_two.address,
+        sender=creator.address,  # Clawback address
         asset_id=asset_id,
-        amount=111
+        receiver=creator.address,
+        clawback_target=receiver_acc.address,
+        amount=1
     )
 )
 
-asset_transfer = algorand.send.asset_transfer(
-    AssetTransferParams(
-        sender=creator.address,
-        receiver=account_three.address,
-        asset_id=asset_id,
-        amount=111,
-        last_valid_round=1000
-    )
-)
-
-print("Account one: " + account_one.address)
-print(algorand.account.get_information(account_one.address))
-
-print("\nAccount two: " + account_two.address)
-print(algorand.account.get_information(account_two.address))
-
-print("\nAccount three: " +  account_three.address)
-print(algorand.account.get_information(account_three.address))
-
+print("Post Clawback:")
+print("Receiver Account Asset Balance", algorand.account.get_information(receiver_acc.address)['assets'][0]['amount'])
+print("Creator Account Asset Balance", algorand.account.get_information(creator.address)['assets'][0]['amount'])
