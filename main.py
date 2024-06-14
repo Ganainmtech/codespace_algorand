@@ -9,10 +9,10 @@ from algokit_utils.beta.algorand_client import (
 algorand = AlgorandClient.default_local_net()
 
 dispenser = algorand.account.dispenser()
-print(dispenser.address)
+print("Dispenser Address: ", dispenser.address)
 
 creator = algorand.account.random()
-print(creator.address)
+print("Creator Address: ", creator.address)
 
 print(algorand.account.get_information(creator.address))
 
