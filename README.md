@@ -30,4 +30,5 @@ Algorand Discord: https://discord.com/invite/algorand
 
 Algodevs X(twitter): https://x.com/algodevs
 
+:)
 
