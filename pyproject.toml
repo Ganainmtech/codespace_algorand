@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "codespace-algorand"
+version = "0.1.0"
+description = ""
+authors = ["0M3REXE <168457506+0M3REXE@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
