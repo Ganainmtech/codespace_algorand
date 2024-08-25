@@ -53,15 +53,6 @@ algorand.send.payment(
 
 # print(algorand.account.get_information(receiver_account.address))
 
-# asset_transfer = algorand.send.asset_transfer(
-#     AssetTransferParams(
-#         sender=creator.address,
-#         receiver=receiver_account.address,
-#         asset_id=asset_id,
-#         amount=10,
-#     )
-# )
-
 # creator a new txn group
 group_tx = algorand.new_group()
 
