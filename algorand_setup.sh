@@ -11,7 +11,3 @@ pip install .
 cd ..
 
 echo "Setup completed."
-
-
-
-
