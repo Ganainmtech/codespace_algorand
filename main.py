@@ -28,8 +28,6 @@ algorand.send.payment(
 
 # print(algorand.account.get_information(creator.address))
 
-# Create an asset
-
 sent_txn = algorand.send.asset_create(
     AssetCreateParams(
         sender=creator.address,
