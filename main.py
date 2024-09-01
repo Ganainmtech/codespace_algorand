@@ -31,8 +31,8 @@ sent_txn = algorand.send.asset_create(
     AssetCreateParams(
         sender=creator.address,
         total=1000,
-        asset_name="elvismiles",
-        unit_name="elv",
+        asset_name="miles",
+        unit_name="mil",
         manager=creator.address,
         clawback=creator.address,
         freeze=creator.address
