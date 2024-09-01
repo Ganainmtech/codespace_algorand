@@ -1,17 +1,20 @@
 from algokit_utils.beta.algorand_client import (
-AlgorandClient, 
-AssetCreateParams, 
-AssetOptInParams, 
-AssetTransferParams, 
-PayParams,
+ AlgorandClient,
+ AssetCreateParams,
+ AssetOptInParams,
+ AssetTransferParams,
+ PayParams,
 )
-algorand=AlgorandClient.default_local_net()
+
+# Client to connect to localnet
+algorand = AlgorandClient.default_local_net()
+# Import dispenser from KMD
 dispenser=algorand.account.dispenser()
 #print ("Dispenser:", dispenser.address)
 
 creator=algorand.account.random()
 #print ("creator:", creator.address)
-
+#Fund creator address
 algorand.send.payment(
     PayParams(
         sender=dispenser.address,
@@ -29,7 +32,7 @@ sent_txn =algorand.send.asset_create(
         unit_name="W3P"
     )
 )
-asset_id=sent_txn["conformation"]["asset-index"]
+asset_id=sent_txn["confirmation"]["asset-index"]
 print ("Asset ID:", asset_id)
 
 receiver_acct= algorand.account.random()
